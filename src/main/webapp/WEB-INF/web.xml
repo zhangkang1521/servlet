@@ -8,6 +8,15 @@
 
   <!-- http://stackoverflow.com/questions/4140448/difference-between-and-in-servlet-mapping-url-pattern -->
 
+  <filter>
+    <filter-name>CORSFilter</filter-name>
+    <filter-class>org.zk.filter.CORSFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>CORSFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <servlet>
     <servlet-name>demoServlet</servlet-name>
     <servlet-class>org.zk.controller.DemoServlet</servlet-class>
