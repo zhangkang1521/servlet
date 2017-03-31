@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -22,7 +21,7 @@ public class HeroServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 5; i++) {
             Hero hero = new Hero();
             hero.setId(100 + i);
             hero.setName("zk" + i);
@@ -32,10 +31,19 @@ public class HeroServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String json = null;
+        String id = req.getParameter("id");
+        if(id != null && !"".equals(id)) {
+            Hero hero = new Hero();
+            hero.setId(Integer.parseInt(id));
+            hero.setName("zk" + id);
+            json = JSON.toJSONString(hero);
+        } else {
+             json = JSON.toJSONString(heroList);
+        }
         resp.setContentType("application/json");
         Writer writer = resp.getWriter();
-        String heroListJson = JSON.toJSONString(heroList);
-        writer.write(heroListJson);
+        writer.write(json);
     }
 
     @Override
@@ -46,10 +54,13 @@ public class HeroServlet extends HttpServlet {
 
         // 读取 content-type: application/json 用req.getParameter(String)读取不到
         BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String line = null;
-        while((line = br.readLine()) != null) {
-            System.out.println(line);
-        }
+        char[] bodyChar = new char[1204];
+        br.read(bodyChar);
+        String bodyStr = new String(bodyChar);
+        System.out.println(bodyStr);
+        Hero hero = JSON.parseObject(bodyStr, Hero.class);
+        hero.setId(200);
+        heroList.add(hero);
         resp.setContentType("application/json; charset=utf-8");
         Writer writer = resp.getWriter();
         String heroListJson = JSON.toJSONString(Result.SUCCESS);
