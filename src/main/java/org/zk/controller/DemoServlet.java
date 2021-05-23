@@ -13,7 +13,6 @@ public class DemoServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id = req.getParameter("id");
-        System.out.println(id);
+       req.getRequestDispatcher("/WEB-INF/jsp/user.jsp").forward(req, resp);
     }
 }
